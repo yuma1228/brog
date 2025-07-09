@@ -30,7 +30,7 @@
     <header>
       <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">日々の日記</a>
+          <a class="navbar-brand ">日々の日記</a>
           <button
             class="navbar-toggler"
             type="button"
@@ -43,9 +43,12 @@
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item ">
+                <a class="nav-link active btn-sm " aria-current="page" href="{% url 'brog:login' %}">ログイン</a>
+              </li>
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{% url 'brog:login' %}">login</a>
+                <a class="nav-link active btn-sm " aria-current="page" href="{% url 'brog:signup' %}">新規登録</a>
               </li>
                 <!--
               <li class="nav-item">
