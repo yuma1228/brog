@@ -6,7 +6,9 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import SignUpForm
+from .forms import SignUpForm, LoginForm
+from django.contrib.auth.views import LoginView as BaseLoginView
+
 
 # ログイン前のトップページ
 # ここでは、いまのところ全ての投稿を表示する
@@ -35,6 +37,7 @@ class HomeView(LoginRequiredMixin,ListView):
         context['all_posts'] = Post.objects.all()
         return context
 
+
 def signup_view(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -46,6 +49,10 @@ def signup_view(request):
         form = SignUpForm()
     
     return render(request, 'brog/signup.html', {'form': form})
+
+class LoginView(BaseLoginView):
+    form_class = LoginForm()
+    template_name = "brog/login.html"
 
 class PostDetailView(DetailView):
     model = Post
