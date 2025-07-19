@@ -11,4 +11,5 @@ urlpatterns = [
     path('login/',LoginView.as_view(redirect_authenticated_user=True,template_name='brog/login.html'),name='login'),
     path('logout/',LogoutView.as_view(),name='logout'),
     path('signup/', views.signup_view, name='signup'),
+    path('mypage/', views.MyPageView.as_view(), name='mypage'),
 ]

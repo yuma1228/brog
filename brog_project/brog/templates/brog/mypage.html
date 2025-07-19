@@ -1,0 +1,28 @@
+<!-- マイページ -->
+{% extends 'brog/base.html' %}
+
+{% block content %}
+
+<h1>{{ user.username }}さんのマイページ</h1>
+
+<h2>投稿一覧</h2>
+{% if posts %}
+<ul>
+    <div class="list-group">
+  {% for post in posts %}
+
+  <a href="{% url 'brog:post_detail' post.id %}" class="list-group-item list-group-item-action">
+    <div class="d-flex w-100 justify-content-between">
+      <h5 class="mb-1">{{ post.title }}</h5>
+      <small>{{ post.created_at|date:"Y年m月d日 H:i" }}</small>
+    </div>
+    <p class="mb-1">{{ post.content|truncatewords:20 }}</p>
+    <small>And some small print.</small>
+  </a>
+  {% endfor %}
+    </div>
+</ul>
+{% else %}
+<p>まだ投稿がありません。</p>
+{% endif %}
+{% endblock%}

@@ -34,8 +34,10 @@
             </ul>
             <div class="d-flex align-items-center">
               {% if user.is_authenticated %}
-              <span class="navbar-text me-2"> {{ user.username }}さん </span>
-              <form action="{% url 'logout' %}" method="post">
+              <a class ="nav-link active btn-sm me-2" href="{% url 'brog:mypage' %}">
+                マイページ
+              </a>
+              <form action="{% url 'brog:logout' %}" method="post">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-outline-secondary btn-sm">
                   ログアウト

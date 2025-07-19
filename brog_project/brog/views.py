@@ -59,6 +59,18 @@ class PostDetailView(DetailView):
     template_name = 'brog/post_detail.html'
     context_object_name = 'post'
     
+class MyPageView(LoginRequiredMixin, ListView):
+    model = Post
+    template_name = 'brog/mypage.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        return Post.objects.filter(author=self.request.user).order_by('-created_at')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        return context
 
 
 # Create your views here.
