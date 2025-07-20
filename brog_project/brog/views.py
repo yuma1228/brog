@@ -1,13 +1,15 @@
 from django.http import HttpResponse
 from .models import Post, Comment
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import SignUpForm, LoginForm
+from .forms import SignUpForm, LoginForm, CreatePostForm
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView as BaseLoginView
+from django.urls import reverse_lazy
 
 
 # ログイン前のトップページ
@@ -21,7 +23,7 @@ class IndexView(ListView):
         return Post.objects.order_by('-created_at')[:3]
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['all_posts'] =  Post.objects.all()
+        context['all_posts'] =  Post.objects.all().order_by('-created_at')
         return context
     
 
@@ -51,7 +53,7 @@ def signup_view(request):
     return render(request, 'brog/signup.html', {'form': form})
 
 class LoginView(BaseLoginView):
-    form_class = LoginForm()
+    form_class = LoginForm
     template_name = "brog/login.html"
 
 class PostDetailView(DetailView):
@@ -71,6 +73,23 @@ class MyPageView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['user'] = self.request.user
         return context
+    
+
+class CreatePostView(LoginRequiredMixin, CreateView):
+    model = Post
+    form_class = CreatePostForm
+    template_name = 'brog/post_create.html'
+    success_url =  reverse_lazy('brog:mypage')
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        messages.success(self.request, 'ポストが作成されました！')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, '内容を正しく入力してください。')
+        return super().form_invalid(form)
 
 
-# Create your views here.
+
+

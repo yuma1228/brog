@@ -5,7 +5,11 @@
 
 <h1>{{ user.username }}さんのマイページ</h1>
 
-<h2>投稿一覧</h2>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>投稿一覧</h2>
+  <a href="{% url 'brog:post_create' %}" class="btn btn-primary">新規投稿</a>
+</div>
+
 {% if posts %}
 <ul>
     <div class="list-group">
@@ -17,7 +21,6 @@
       <small>{{ post.created_at|date:"Y年m月d日 H:i" }}</small>
     </div>
     <p class="mb-1">{{ post.content|truncatewords:20 }}</p>
-    <small>And some small print.</small>
   </a>
   {% endfor %}
     </div>

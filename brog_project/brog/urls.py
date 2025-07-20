@@ -12,4 +12,5 @@ urlpatterns = [
     path('logout/',LogoutView.as_view(),name='logout'),
     path('signup/', views.signup_view, name='signup'),
     path('mypage/', views.MyPageView.as_view(), name='mypage'),
+    path('create/', views.CreatePostView.as_view(), name='post_create'),
 ]
