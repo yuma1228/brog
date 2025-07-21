@@ -1,36 +1,66 @@
-<!DOCTYPE html>
+{% extends 'brog/base.html' %} {% load static %} {#
+ブラウザのタブに表示されるタイトルを記事のタイトルに設定 #} {% block title %}{{
+post.title }} | 日々の日記{% endblock %} {% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-9">
+    {# 投稿内容をカードで表示 #}
+    <div class="card shadow-sm mb-4">
+    <div class="card-body p-4">
 
-<html lang="ja">
-<head>
-    {% load static %}
+        <h1 class="card-title border-bottom pb-3 mb-3 d-flex justify-content-between align-items-center">
+            
+            <span>{{ post.title }}</span>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brog</title>
-    <link rel="stylesheet" href="{% static 'brog/css/style.css' %}">
-</head>
-<body>
-    <header>
-        <h1>日々の日記</h1>
-    </header>
-    <main>
-        <section>
-            <h2>{{ post.title }}</h2>
-            <p>{{ post.content }}</p>
-            <p>投稿者: {{ post.author }}</p>
-            <p>投稿日: {{ post.created_at }}</p>
-        </section>
-        <section>
-            <h2>コメント</h2>
-            <ul>
-                {% for comment in post.comments.all %}
-                    <li>{{ comment.author }}: {{ comment.content }}</li>
-                {% endfor %}
-            </ul>
-        </section>
-    </main>
-    <footer>
-        <p>&copy; YUMA NAGANO All rights reserved.</p>
-    </footer>
-</body>
-</html>
+            {% if post.author == user %}
+                <a  class="btn btn-outline-danger btn-sm">
+                    削除
+                </a>
+            {% endif %}
+        </h1>
+
+        <div class="text-end text-muted small mb-3">
+            <span>投稿者: {{ post.author.username }}</span> |
+            <span>投稿日: {{ post.created_at|date:"Y年n月j日" }}</span>
+        </div>
+        <div class="card-text fs-5">
+            {{ post.content|linebreaksbr }}
+        </div>
+    </div>
+</div>
+
+    {# コメントセクションをカードで表示 #}
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h2 class="card-title h4 border-bottom pb-2 mb-3">コメント</h2>
+
+        {% for comment in post.comments.all %}
+        <div class="d-flex mb-3">
+          <div class="flex-shrink-0">
+            {# 将来的にアバター画像などを表示できるスペース #}
+            <svg
+              class="bd-placeholder-img rounded-circle"
+              width="50"
+              height="50"
+              xmlns="http://www.w3.org/2000/svg"
+              role="img"
+              aria-label="Placeholder: 50x50"
+              preserveAspectRatio="xMidYMid slice"
+              focusable="false"
+            >
+              <title>Placeholder</title>
+              <rect width="100%" height="100%" fill="#868e96"></rect>
+            </svg>
+          </div>
+          <div class="ms-3">
+            <h5 class="mt-0 mb-1 fw-bold">{{ comment.author.username }}</h5>
+            {{ comment.content|linebreaksbr }}
+          </div>
+        </div>
+        {% empty %}
+        <p class="text-muted">コメントはまだありません。</p>
+        {% endfor %} {# ここにコメント投稿フォームを設置することもできます #}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
