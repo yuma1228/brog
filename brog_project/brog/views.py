@@ -55,13 +55,13 @@ def signup_view(request):
 class LoginView(BaseLoginView):
     form_class = LoginForm
     template_name = "brog/login.html"
-
 class PostDetailView(DetailView):
     model = Post
     template_name = 'brog/post_detail.html'
     context_object_name = 'post'
     
 class MyPageView(LoginRequiredMixin, ListView):
+    paginate_by = 6
     model = Post
     template_name = 'brog/mypage.html'
     context_object_name = 'posts'
