@@ -36,7 +36,7 @@ class HomeView(LoginRequiredMixin,ListView):
         return Post.objects.order_by('-created_at')[:3]
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['all_posts'] = Post.objects.all()
+        context['all_posts'] = Post.objects.all().order_by('-created_at')
         return context
 
 
