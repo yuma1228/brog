@@ -13,4 +13,5 @@ urlpatterns = [
     path('signup/', views.signup_view, name='signup'),
     path('mypage/', views.MyPageView.as_view(), name='mypage'),
     path('create/', views.CreatePostView.as_view(), name='post_create'),
+    path('post/<int:pk>/delete/', views.PostDeleteView.as_view(), name='post_delete'),
 ]

@@ -1,11 +1,11 @@
 from django.http import HttpResponse
 from .models import Post, Comment
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView,DeleteView
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
 from .forms import SignUpForm, LoginForm, CreatePostForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView as BaseLoginView
@@ -55,6 +55,7 @@ def signup_view(request):
 class LoginView(BaseLoginView):
     form_class = LoginForm
     template_name = "brog/login.html"
+    
 class PostDetailView(DetailView):
     model = Post
     template_name = 'brog/post_detail.html'
@@ -89,6 +90,14 @@ class CreatePostView(LoginRequiredMixin, CreateView):
     def form_invalid(self, form):
         messages.error(self.request, '内容を正しく入力してください。')
         return super().form_invalid(form)
+
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Post
+    success_url = reverse_lazy('brog:mypage') 
+    
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author
 
 
 
