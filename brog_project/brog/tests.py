@@ -40,6 +40,50 @@ class ViewTest(TestCase):
         new_post = Post.objects.get(title='新しい投稿')
         self.assertEqual(new_post.author, self.user1)
         
+    # ViewTestクラス内
+
+    def test_author_can_delete_own_post(self):
+        """投稿者本人が、自分の投稿を削除できるか"""
+        self.client.login(username='user1', password='password')
+        post_count = Post.objects.count()
+        response = self.client.post(reverse('brog:post_delete', kwargs={'pk': self.post1.pk}))
+        self.assertRedirects(response, reverse('brog:mypage'))
+        self.assertEqual(Post.objects.count(), post_count - 1)
+        self.assertFalse(Post.objects.filter(pk=self.post1.pk).exists())
+
+    def test_user_cannot_delete_others_post(self):
+        """他人の投稿は削除できないか"""
+        self.client.login(username='user2', password='password')
+        post_count = Post.objects.count()
+        response = self.client.post(reverse('brog:post_delete', kwargs={'pk': self.post1.pk}))
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(Post.objects.count(), post_count)
+
+    def test_post_detail_view_content(self):
+        """詳細ページに正しいタイトルと内容が表示されるか"""
+        response = self.client.get(reverse('brog:post_detail', kwargs={'pk': self.post1.pk}))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.post1.title)
+        self.assertContains(response, self.post1.content)
+
+    def test_login_view_success(self):
+        """正しい情報でログインできるか"""
+        response = self.client.post(reverse('brog:login'), {
+            'username': 'user1',
+            'password': 'password',
+        })
+        self.assertRedirects(response, reverse('brog:home'))
+
+    def test_login_view_failure(self):
+        """間違った情報でログインに失敗するか"""
+        response = self.client.post(reverse('brog:login'), {
+            'username': 'user1',
+            'password': 'wrongpassword',
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'ユーザー名またはパスワードが正しくありません。') 
+        
+        
 class PostModelTest(TestCase):
     
     def test_post_creation_and_str(self):

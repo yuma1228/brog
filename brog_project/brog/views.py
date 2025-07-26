@@ -56,6 +56,7 @@ class LoginView(BaseLoginView):
     form_class = LoginForm
     template_name = "brog/login.html"
     
+    
 class PostDetailView(DetailView):
     model = Post
     template_name = 'brog/post_detail.html'

@@ -8,8 +8,10 @@ class SignUpForm(UserCreationForm):
         model = User
     
 class LoginForm(AuthenticationForm):
-    class Meta:
-        model = User
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.error_messages['invalid_login'] = 'ユーザー名またはパスワードが正しくありません。'
+        
         
 class CreatePostForm(forms.ModelForm):
     class Meta:
