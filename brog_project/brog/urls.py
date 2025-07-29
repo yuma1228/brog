@@ -14,4 +14,5 @@ urlpatterns = [
     path('mypage/', views.MyPageView.as_view(), name='mypage'),
     path('create/', views.CreatePostView.as_view(), name='post_create'),
     path('post/<int:pk>/delete/', views.PostDeleteView.as_view(), name='post_delete'),
+    path('post/<int:pk>/comment/', views.CommentCreateView.as_view(), name='comment_create'),
 ]
